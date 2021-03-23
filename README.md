@@ -45,23 +45,25 @@ and you should be good to go.
 Over 1,000 new images have been added ever since Henry Lim first released the repository in April 2016. Not only that,
 but new countries have been added, allowing us to truly experience the natural beauty and diversity of our planet. 
 Indeed, we can appreciate the change in the following plots, where the left one is the old JSON, and the right one is 
-the new JSON file:
+the new JSON file (click for larger image):
 
-<p float="middle">
-  <img src="/mapr_earthview_old.png" width="50%" alt="Old JSON" title="Old JSON">
-  <img src="/map_earthview_new.png" width="50%" alt="Latest JSON" title="Latest JSON">
-</p>
+Old JSON | New JSON
+:---:|:---:
+![](map_earthview_old.png) | ![](map_earthview_new.png)
 
 Some of the latest images that have been added to Earth View are shown here, and I believe they speak for themselves as 
 to why I wished to update the JSON file.
 
-:guatemala:
+Guatemala :guatemala:
+
 ![](https://www.gstatic.com/prettyearth/assets/preview/13358.jpg "Volcán de Fuego, Guatemala – Earth View from Google")
 
-:eritrea:
+Eritrea :eritrea:
+
 ![](https://www.gstatic.com/prettyearth/assets/preview/12232.jpg "Dahlak Marine National Park, Eritrea – Earth View from Google")
 
-:paraguay:
+Paraguay :paraguay:
+
 ![](https://www.gstatic.com/prettyearth/assets/preview/13440.jpg "Río Paraná, Paraguay – Earth View from Google")
 
 ---
