@@ -24,7 +24,7 @@ else is interested in making the relevant updates (that is, if they are even nec
 |File name | Description|
 | :--- | :--- |
 | [all_imgs_full_resolution.zip](https://docs.google.com/uc?id=1L3VzPGkzAuBtz_a01DZG-HSOaQzyDpNz) | 2609 images at full resolution  (`1800x1200` pixels)  |
-| [imgs_by_country_full_resolution.zip](https://docs.google.com/uc?id=1jMq1wJaspESco_JOE5vvTQWZpi1SCWAG) | 2069 images at full resolution sorted by country |
+| [imgs_by_country_full_resolution.zip](https://docs.google.com/uc?id=1jMq1wJaspESco_JOE5vvTQWZpi1SCWAG) | 2609 images at full resolution sorted by country |
 
 ---
 
