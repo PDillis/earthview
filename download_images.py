@@ -1,5 +1,5 @@
 import os
-from typing import Union
+from typing import Union, List
 
 import shutil
 import operator
@@ -69,8 +69,8 @@ def download_static_json(json_path: Union[str, os.PathLike] = os.getcwd()) -> No
 
 def get_img_urls_static_json() -> list:
 	"""
-	Auxiliary function to get the image URLs using the static JSON file that can be found in the original repository.
-	The downside is that more images may become available, and this JSON file won't be updated as often.
+	Auxiliary function to get the image URLs using the static JSON file that can be found in the GitHub repository.
+	The downside is that more images may become available, and this JSON file won't be updated (if I ever update it).
 
 	:return: List of image URLs.
 	"""
@@ -93,7 +93,7 @@ def get_img_urls_local(
 		json_path: Union[str, os.PathLike] = os.getcwd()) -> list:
 	"""
 	Auxiliary function to get the image URLs that are stored in the local JSON file. If it doesn't exist, then we will
-	use the static JSON file found in the "earthview" repository.
+	use the static JSON file found in the "earthview" repository in GitHub.
 
 	:param processes_per_cpu: Number of processes to run in parallel
 	:param max_index: Maximum image url to try; try higher number as time progresses
@@ -175,15 +175,15 @@ def download_all(
 
 
 @main.command(name='download-all')
-@click.option('-sj', '--static-json', is_flag=True, help='', )
-@click.option('-jp', '--json-path', type=click.Path(), help='', default=os.getcwd(), show_default=True)
-@click.option('-sp', '--img-save-path', type=click.Path(), help='', default=os.path.join(os.getcwd(), 'images'), show_default=True)
-@click.option('-z', '--make-zip', is_flag=True, help='', )
+@click.option('-sj', '--static-json', is_flag=True, help='Use the static JSON file found in the Github repository')
+@click.option('-jp', '--json-path', type=click.Path(), help='Path to the local JSON file', default=os.getcwd(), show_default=True)
+@click.option('-sp', '--img-save-path', type=click.Path(), help='Path to save the downloaded images', default=os.path.join(os.getcwd(), 'images'), show_default=True)
+@click.option('-z', '--make-zip', is_flag=True, help='Make a ZIP file of the image save dir (easier to move around)')
 def download_images(
 		static_json: bool,
 		json_path: Union[str, os.PathLike],
 		img_save_path: Union[str, os.PathLike],
-		make_zip: bool):
+		make_zip: bool) -> None:
 	"""
 	Download all the images into the local machine without grouping.
 
@@ -228,13 +228,13 @@ def download_images(
 # ===========================================================================================
 
 
-def get_img_urls_by_country_static() -> list:
+def get_img_urls_by_country_static() -> List[tuple]:
 	"""
 	Auxiliary function to get the image URLs and respective countries using the static JSON file that can be found in
 	the original repository. The downside is that more images may become available, and this JSON file won't be updated
 	as often.
 
-	:return: List of tuples of image URLs and respective countries
+	:return: List of tuples of image URLs and their respective country
 	"""
 	# Load the json and get the image urls (2069 images in total, as of mid-March 2021)
 	static_url = 'https://raw.githubusercontent.com/PDillis/earthview/master/earthview.json'
@@ -250,7 +250,7 @@ def get_img_urls_by_country_static() -> list:
 def get_img_urls_by_country_local(
 		processes_per_cpu: int = 8,
 		max_index: int = 20000,
-		json_path: Union[str, os.PathLike] = os.getcwd()) -> list:
+		json_path: Union[str, os.PathLike] = os.getcwd()) -> List[tuple]:
 	"""
 	Auxiliary function to get the image URLs that are stored in the local JSON file. If it doesn't exist, then we will
 	use the static JSON file found in the "earthview" repository.
@@ -282,14 +282,17 @@ def download_by_country(
 		imgs_by_country: list,
 		save_path: Union[str, os.PathLike]) -> None:
 	"""
-	Auxiliary function to download all the images to the save_path.
+	Auxiliary function to download all the images to the save_path. If the image has already been
+	downloaded (in the './images/all/full_resolution/' directory), then we will copy it to the save_path,
+	which by default is './images/all/full_resolution'
 
 	:param imgs_by_country: list of tuples containing all the urls of the images and their respective country
 	:param save_path: Path to save the images at
 	:return: None, the images will be saved at the desired path
 	"""
 	for img_url, country in tqdm(imgs_by_country, desc='Downloading images...', unit='images'):
-		# If the image doesn't belong to any country, rename to "None"
+		country = country.replace(' ', '')
+		# If the image doesn't belong to any country, rename to 'None'
 		if country == '':
 			country = 'None'
 		# Make the country dir if it doesn't exist
@@ -315,15 +318,15 @@ def download_by_country(
 
 
 @main.command(name='download-by-country')
-@click.option('-sj', '--static-json', is_flag=True, help='', default=False, show_default=True)
-@click.option('-jp', '--json-path', type=click.Path(), help='', default=os.getcwd(), show_default=True)
-@click.option('-sp', '--img-save-path', type=click.Path(), help='', default=os.path.join(os.getcwd(), 'images'), show_default=True)
-@click.option('-z', '--make-zip', is_flag=True, help='', )
+@click.option('-sj', '--static-json', is_flag=True, help='Use static JSON file found in the Github repository', default=False, show_default=True)
+@click.option('-jp', '--json-path', type=click.Path(), help='Path to the local JSON file if not using the static one', default=os.getcwd(), show_default=True)
+@click.option('-sp', '--img-save-path', type=click.Path(), help='Root path to save the downloaded images', default=os.path.join(os.getcwd(), 'images'), show_default=True)
+@click.option('-z', '--make-zip', is_flag=True, help='Make a zip file of the image save dir (easier to move around)')
 def download_images_by_country(
 		static_json: bool,
 		json_path: Union[str, os.PathLike],
 		img_save_path: Union[str, os.PathLike],
-		make_zip: bool):
+		make_zip: bool) -> None:
 	"""
 	Download all the images into the local machine by grouping them by country.
 
@@ -332,7 +335,7 @@ def download_images_by_country(
 	:param static_json: Use the static JSON file found in the Github repository (in case the local one is corrupted or lost).
 	:param json_path: Path to the local JSON file with the image URLs. Used only if not using the static JSON file.
 	:param img_save_path: Root path where we will save our images at.
-	:param make_zip:
+	:param make_zip: Make a ZIP file with all the images; to be saved at './images/zip_files'
 	:return: Images will be saved at the specified path in full resolution (classified by country).
 	"""
 	# Set the final save path for the images
